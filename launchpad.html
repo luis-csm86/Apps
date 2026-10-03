@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My apps</title>
+<meta name="theme-color" content="#E9EDF3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121A2B" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="My apps">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Finger+Paint&family=PT+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #E9EDF3;
+    --surface: #FFFFFF;
+    --ink: #1B2A44;
+    --muted: #5B6880;
+    --line: #D3DAE5;
+    --focus: #3355FF;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #02060f;
+      --surface: #1B2539;
+      --ink: #EDF1F8;
+      --muted: #9AA7BD;
+      --line: #2C3850;
+      --focus: #8FA5FF;
+      --neon: #00ffff;
+      --glow: #bf00ff;
+    }
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html {
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+    /* Scales the whole page with the window: 16px on phones, up to 22px on large screens */
+    font-size: clamp(16px, 0.6vw + 11px, 22px);
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PT Mono", sans-serif;
+    font-size: 1rem;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  main {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 4.5rem 1.25rem 4rem;
+  }
+  header { margin-bottom: 2rem; }
+  h1 {
+    font-size: clamp(2.6rem, 9vw, 4.5rem);
+    font-family: "Finger Paint", sans-serif;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: var(--neon);
+    margin: 0 0 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    text-shadow: 0 0 10px var(--glow), 0 0 20px var(--glow);
+  }
+  .sub { color: var(--muted); margin: 0; }
+
+  .search {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .search input {
+    width: 100%;
+    font: inherit;
+    font-size: 1.05rem;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 0.9rem;
+    padding: 0.85rem 3rem 0.85rem 1rem;
+  }
+  .search input::placeholder { color: var(--muted); }
+  .search input:focus { outline: none; border-color: var(--focus); }
+  .search kbd {
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0 0.45rem;
+  }
+
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+  a.app {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1rem 0.85rem 0.85rem;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 1.1rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  a.app:hover { border-color: var(--tint); box-shadow: 0 0 12px var(--tint);}
+  a.app:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.9rem;
+    background: var(--tint);
+    display: grid;
+    place-items: center;
+  }
+  .icon svg { width: 1.7rem; height: 1.7rem; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .name { font-weight: 600; font-size: 1.15rem; margin: 0 0 0.1rem; letter-spacing: -0.01em; }
+  .desc { color: var(--muted); font-size: 0.93rem; margin: 0; }
+  .meta { display: grid; justify-items: end; gap: 0.35rem; }
+  .host {
+    font-size: 0.78rem;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+    white-space: nowrap;
+  }
+  .key { font-size: 0.78rem; color: var(--muted); }
+  .empty { color: var(--muted); padding: 1.5rem 0.25rem; }
+
+  footer { margin-top: 2.5rem; color: var(--muted); font-size: 0.85rem; }
+
+  @media (max-width: 520px) {
+    main { padding-top: 2.25rem; }
+    a.app { grid-template-columns: 3rem 1fr; }
+    .icon { width: 3rem; height: 3rem; border-radius: 12px; }
+    .meta { grid-column: 2; justify-items: start; }
+    .key, .search kbd { display: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>My apps</h1>
+    <p class="sub">Everything I've built, in one place.</p>
+  </header>
+
+  <div class="search">
+    <input id="q" type="search" placeholder="Find an app" autocomplete="off" aria-label="Find an app">
+    <kbd>/</kbd>
+  </div>
+
+  <ul id="list"></ul>
+
+  <footer>Press / to search, Enter to open the first match, or 1–9 to open an app directly.</footer>
+</main>
+
+<script>
+/* ---- Edit this list to add, remove or reorder apps ---- */
+const APPS = [
+  {
+    name: "Data Tools",
+    url: "https://data-tools-olive.vercel.app/",
+    desc: "Upload datasets, ask questions, generate insights and visualize patterns with AI.",
+    host: "Vercel",
+    color: "#0E8C86",
+    icon: "chart",
+    tags: "data csv ai analysis charts"
+  },
+  {
+    name: "Flow",
+    url: "https://flow-azure-six.vercel.app/",
+    desc: "Calendar for tasks, notes and meetings to organize the day.",
+    host: "Vercel",
+    color: "#6A4BD8",
+    icon: "calendar",
+    tags: "calendar tasks notes meetings planner"
+  },
+  {
+    name: "Recipes Book",
+    url: "https://recipesbook-00.streamlit.app/",
+    desc: "Recipes with ingredients, preparation steps and images.",
+    host: "Streamlit",
+    color: "#E0A100",
+    icon: "book",
+    tags: "food cooking recipes kitchen"
+  },
+  {
+    name: "Steps Tracker",
+    url: "https://steps-ruddy.vercel.app/",
+    desc: "Track daily steps and keep your health goals in view.",
+    host: "Vercel",
+    color: "#2E9E4F",
+    icon: "steps",
+    tags: "health walking fitness steps"
+  },
+  {
+    name: "Music Rankings",
+    url: "https://music-rankings-flax.vercel.app/",
+    desc: "Rankings built from Spotify weekly summary stats.",
+    host: "Vercel",
+    color: "#D6337A",
+    icon: "music",
+    tags: "spotify songs music charts"
+  },
+  {
+    name: "Portfolio",
+    url: "https://luis-c2255.github.io/",
+    desc: "Showcase of my work and projects.",
+    host: "GitHub Pages",
+    color: "#0072BB",
+    icon: "home",
+    tags: "portfolio projects showcase web"
+  }
+];
+/* -------------------------------------------------------- */
+
+const ICONS = {
+  chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  book: '<path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h13"/><path d="M9 7h6M9 11h4"/>',
+  steps: '<path d="M7 16c-1.7 0-3-1.6-3-4.5S5.5 5 7.5 5 10 7 10 9.5 9 16 7 16zM5 19.5a2 2 0 0 0 4 0v-1H5z"/><path d="M17 12c1.7 0 3-1.6 3-4.5S18.5 1 16.5 1 14 3 14 5.5 15 12 17 12zM19 15.5a2 2 0 0 1-4 0v-1h4z"/>',
+  music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>',
+  home: '<path d="m21.664 10.252l-9-8a1 1 0 0 0-1.328 0l-9 8a1 1 0 0 0 1.328 1.496L4 11.449V21a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-9.551l.336.299a1 1 0 0 0 1.328-1.496M9.184 20a2.982 2.982 0 0 1 5.632 0Zm1.316-5.5A1.5 1.5 0 1 1 12 16a1.5 1.5 0 0 1-1.5-1.5M18 20h-1.101a5 5 0 0 0-2.259-3.228a3.47 3.47 0 0 0 .86-2.272a3.5 3.5 0 0 0-7 0a3.47 3.47 0 0 0 .86 2.272A5 5 0 0 0 7.1 20H6V9.671l6-5.333l6 5.333Z"/>'
+};
+
+const list = document.getElementById("list");
+const q = document.getElementById("q");
+let visible = [];
+
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function render(filter = "") {
+  const f = filter.trim().toLowerCase();
+  visible = APPS.filter(a =>
+    !f || [a.name, a.desc, a.host, a.tags].join(" ").toLowerCase().includes(f)
+  );
+  if (!visible.length) {
+    list.innerHTML = `<li class="empty">No app matches "${escapeHTML(filter)}". Try another word or clear the search.</li>`;
+    return;
+  }
+  list.innerHTML = visible.map(a => {
+    const shortcut = APPS.indexOf(a) + 1;
+    const sleepy = a.host === "Streamlit"
+      ? ' title="Streamlit apps can take a few seconds to wake up if they haven\'t been used recently"'
+      : "";
+    return `
+      <li>
+        <a class="app" href="${escapeHTML(a.url)}" target="_blank" rel="noopener" style="--tint:${a.color}">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24">${ICONS[a.icon] || ICONS.link}</svg></span>
+          <span>
+            <p class="name">${escapeHTML(a.name)}</p>
+            <p class="desc">${escapeHTML(a.desc)}</p>
+          </span>
+          <span class="meta">
+            <span class="host"${sleepy}>${escapeHTML(a.host)}</span>
+            ${shortcut <= 9 ? `<span class="key">Key ${shortcut}</span>` : ""}
+          </span>
+        </a>
+      </li>`;
+  }).join("");
+}
+
+q.addEventListener("input", () => render(q.value));
+q.addEventListener("keydown", e => {
+  if (e.key === "Enter" && visible[0]) window.open(visible[0].url, "_blank", "noopener");
+  if (e.key === "Escape") { q.value = ""; render(); q.blur(); }
+});
+
+document.addEventListener("keydown", e => {
+  if (document.activeElement === q || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "/") { e.preventDefault(); q.focus(); return; }
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 9 && APPS[n - 1]) window.open(APPS[n - 1].url, "_blank", "noopener");
+});
+
+render();
+</script>
+</body>
+</html>
